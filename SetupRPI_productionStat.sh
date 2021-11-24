@@ -140,9 +140,10 @@ export DISPLAY=:0.0
 pcmanfm --set-wallpaper "$wallpaperpath/GPV_Wallpaper.png"
 
 # Prevent screensaver and open webpage at boot
-echo '/usr/bin/chromium-browser --kiosk --disable-restore-session-state https://inttargitapp.int.gpv.dk/anywhere' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
+echo '@xset s off' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
+echo '@xset -dpms' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo '@xset s noblank' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
-echo '@xset -dpms s off' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
+echo '/usr/bin/chromium-browser --kiosk --disable-restore-session-state https://inttargitapp.int.gpv.dk/anywhere' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 
 # Create disable HDMI service
 echo "[Unit]" | sudo tee /etc/systemd/system/rpi_no_hdmi.service
