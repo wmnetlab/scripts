@@ -158,12 +158,18 @@ echo "WantedBy=default.target" | sudo tee -a /etc/systemd/system/rpi_no_hdmi.ser
 
 # Add crontab entries
 echo -e '\e[36m'"Adding crontab entries..."'\e[0m'
+echo -e "$(sudo crontab -l 2>/dev/null)\n\# m h  dom mon dow   command" | sudo crontab -
 echo -e "$(sudo crontab -l 2>/dev/null)\n 45 5 * * 1,2,3,4,5 /sbin/shutdown -r now" | sudo crontab -
 echo -e "$(sudo crontab -l 2>/dev/null)\n 10 22 * * 1,2,3,4,5 service rpi_no_hdmi start" | sudo crontab -
 #(crontab -l 2>/dev/null; echo "0 8 * * 1,2,3,4,5 /sbin/shutdown -r now") | sudo crontab -
 #(crontab -l 2>/dev/null; echo "0 20 * * 1,2,3,4,5 service rpi_no_hdmi start") | sudo crontab -
 # adding to other user crontab:
 # (crontab -l 2>/dev/null; echo "0 20 * * 1,2,3,4,5 service rpi_no_hdmi start") | sudo crontab -u pi -
+# Mute sound
+echo -e '\e[36m'"Muting sound output...\n"'\e[0m'
+amixer sset Master 0
+amixer sset Master off
+sudo alsactl store
 echo -e '\e[36m'"Do you want to update pi user password? (y/n)"'\e[0m'
 read pipass
 if [[ "$(echo $pipass | tr '[:upper:]' '[:lower:]')" == "y" ]]; then passwd; fi
