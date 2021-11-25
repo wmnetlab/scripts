@@ -2,20 +2,25 @@
 #######################################################################################################
 ## Script to configure a raspberry for production status monitoring
 ## It displays a web page in kiosk mode with production status information
+## to exit kiosk mode press [ctrl] + F4
 ##
 ## Script created 23.11.2021 by Marc Wenger
 ##
 #######################################################################################################
 ## TODO
-# webpage to open in kioskmode
 # setup correct start and stop times
 # check autorefresh of data in browser
 
 ###### PARAMETERS###################
 wallpaperpath=/home/pi    #change to /home/pi
-
+staturl="https://inttargitapp.int.gpv.dk/anywhere"
 ###### END PARAMETERS ##############
 echo -e '\e[46m''\e[30m'"Welcome to the installation script for Production status monitor..."'\e[0m'
+if [[ $EUID -eq 0 ]]; then
+   echo -e '\e[31m' "Please run the script as pi and NOT root!  ...exiting script...."'\e[0m'
+   exit 1
+fi
+
 confirmcompname="n"
 while [[ "$confirmcompname" != "y" ]]
 do
@@ -143,7 +148,7 @@ pcmanfm --set-wallpaper "$wallpaperpath/GPV_Wallpaper.png"
 echo '@xset s off' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo '@xset -dpms' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo '@xset s noblank' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
-echo '/usr/bin/chromium-browser --kiosk --disable-restore-session-state https://inttargitapp.int.gpv.dk/anywhere' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
+echo "/usr/bin/chromium-browser --kiosk --disable-restore-session-state $staturl" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 
 # Create disable HDMI service
 echo "[Unit]" | sudo tee /etc/systemd/system/rpi_no_hdmi.service
@@ -158,18 +163,15 @@ echo "WantedBy=default.target" | sudo tee -a /etc/systemd/system/rpi_no_hdmi.ser
 
 # Add crontab entries
 echo -e '\e[36m'"Adding crontab entries..."'\e[0m'
-echo -e "$(sudo crontab -l 2>/dev/null)\n\# m h  dom mon dow   command" | sudo crontab -
 echo -e "$(sudo crontab -l 2>/dev/null)\n 45 5 * * 1,2,3,4,5 /sbin/shutdown -r now" | sudo crontab -
 echo -e "$(sudo crontab -l 2>/dev/null)\n 10 22 * * 1,2,3,4,5 service rpi_no_hdmi start" | sudo crontab -
-#(crontab -l 2>/dev/null; echo "0 8 * * 1,2,3,4,5 /sbin/shutdown -r now") | sudo crontab -
-#(crontab -l 2>/dev/null; echo "0 20 * * 1,2,3,4,5 service rpi_no_hdmi start") | sudo crontab -
-# adding to other user crontab:
-# (crontab -l 2>/dev/null; echo "0 20 * * 1,2,3,4,5 service rpi_no_hdmi start") | sudo crontab -u pi -
-# Mute sound
-echo -e '\e[36m'"Muting sound output...\n"'\e[0m'
-amixer sset Master 0
-amixer sset Master off
-sudo alsactl store
+
+# Mute sound - Needed only on Raspian with bullseye
+#echo -e '\e[36m'"Muting sound output...\n"'\e[0m'
+#amixer sset Master 0
+#amixer sset Master off
+#sudo alsactl store
+
 echo -e '\e[36m'"Do you want to update pi user password? (y/n)"'\e[0m'
 read pipass
 if [[ "$(echo $pipass | tr '[:upper:]' '[:lower:]')" == "y" ]]; then passwd; fi
