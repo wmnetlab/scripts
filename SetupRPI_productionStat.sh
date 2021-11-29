@@ -157,7 +157,7 @@ if [[ "$(echo $installvnc | tr '[:upper:]' '[:lower:]')" == "y" ]]; then
 	echo -e '\e[36m'"Please enter vnc connection password and verify"'\e[0m'
 	sudo vncpasswd -service
 	echo "Starting vnc server....."
-	sudo systemctl start vncserver-x11-serviced.servic
+	sudo systemctl start vncserver-x11-serviced.service
 fi
 
 
