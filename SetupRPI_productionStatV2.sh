@@ -136,7 +136,7 @@ echo -e '\e[36m'"Adding crontab entries..."'\e[0m'
 echo -e "$(sudo crontab -l 2>/dev/null)\n 45 5 * * 1,2,3,4,5 /sbin/shutdown -r now" | sudo crontab -
 # echo -e "$(sudo crontab -l 2>/dev/null)\n 10 22 * * 1,2,3,4,5 service rpi_no_hdmi start" | sudo crontab -
 echo -e "$(crontab -l 2>/dev/null)\n 10 22 * * 1,2,3,4,5 pkill -o chromium" | crontab -
-echo -e "$(crontab -l 2>/dev/null)\n 11 22 * * 1,2,3,4,5 /usr/bin/chromium-browser --kiosk --disable-restore-session-state /home/pi/black.html" | crontab -
+echo -e "$(crontab -l 2>/dev/null)\n 11 22 * * 1,2,3,4,5 export DISPLAY=:0 /usr/bin/chromium-browser --kiosk --disable-restore-session-state /home/pi/black.html" | crontab -
 
 # Mute sound - Needed only on Raspian with bullseye
 #echo -e '\e[36m'"Muting sound output...\n"'\e[0m'
