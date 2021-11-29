@@ -149,6 +149,17 @@ echo -e "$(sudo crontab -l 2>/dev/null)\n 10 22 * * 1,2,3,4,5 service rpi_no_hdm
 #amixer sset Master 0
 #amixer sset Master off
 #sudo alsactl store
+echo -e '\e[36m'"Do you want to configure VNC server? (y/n)"'\e[0m'
+read installvnc
+if [[ "$(echo $installvnc | tr '[:upper:]' '[:lower:]')" == "y" ]]; then 
+	sudo systemctl enable vncserver-x11-serviced.service
+	echo -e "Authentication=VncAuth" | sudo tee -a /root/.vnc/config.d/vncserver-x11
+	echo -e '\e[36m'"Please enter vnc connection password and verify"'\e[0m'
+	sudo vncpasswd -service
+	echo "Starting vnc server....."
+	sudo systemctl start vncserver-x11-serviced.servic
+fi
+
 
 echo -e '\e[36m'"Do you want to update pi user password? (y/n)"'\e[0m'
 read pipass
