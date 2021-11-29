@@ -129,7 +129,7 @@ echo '@unclutter -idle 0' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo "/usr/bin/chromium-browser --kiosk --disable-restore-session-state $staturl" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 
 # Create html file with black backgroound
-echo -e "<!DOCTYPE html> \n <html>\n <head>\n <title>Pause</title>\n </head>\n <body style="background-color:black;">\n </body></html>" | tee /home/pi/black.html
+echo -e "<!DOCTYPE html> \n <html>\n <head>\n <title>Pause</title>\n </head>\n <body style=\"background-color:black;\">\n </body></html>" | tee /home/pi/black.html
 
 # Add crontab entries
 echo -e '\e[36m'"Adding crontab entries..."'\e[0m'
@@ -151,7 +151,7 @@ if [[ "$(echo $installvnc | tr '[:upper:]' '[:lower:]')" == "y" ]]; then
 	echo -e '\e[36m'"Please enter vnc connection password and verify"'\e[0m'
 	sudo vncpasswd -service
 	echo "Starting vnc server....."
-	sudo systemctl start vncserver-x11-serviced.servic
+	sudo systemctl start vncserver-x11-serviced.service
 fi
 
 
