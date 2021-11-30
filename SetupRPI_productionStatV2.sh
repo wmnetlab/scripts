@@ -18,6 +18,7 @@
 # Parameters can be changed here directly or overwritten by command line arguments using -varname "VALUE"
 wallpaperpath=/home/pi    #change to /home/pi
 staturl="https://inttargitapp.int.gpv.dk/anywhere"
+blackurl="/home/pi/black.html"
 ###### END PARAMETERS ##########################################################################
 # Read parameters from command line
 while [ $# -gt 0 ]; do
@@ -129,15 +130,16 @@ echo '@unclutter -idle 0' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo "/usr/bin/chromium-browser --kiosk --disable-restore-session-state $staturl" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 
 # Create html file with black backgroound
-echo -e "<!DOCTYPE html> \n <html>\n <head>\n <title>Pause</title>\n </head>\n <body style=\"background-color:black;\">\n </body></html>" | tee /home/pi/black.html
+echo -e "<!DOCTYPE html> \n <html>\n <head>\n <title>Pause</title>\n </head>\n <body style=\"background-color:black;\">\n </body></html>" | tee $blackurl
 
 # Add crontab entries
 echo -e '\e[36m'"Adding crontab entries..."'\e[0m'
-echo -e "$(sudo crontab -l 2>/dev/null)\n 45 5 * * 1,2,3,4,5 /sbin/shutdown -r now" | sudo crontab -
+# echo -e "$(sudo crontab -l 2>/dev/null)\n 45 5 * * 1,2,3,4,5 /sbin/shutdown -r now" | sudo crontab -
 # echo -e "$(sudo crontab -l 2>/dev/null)\n 10 22 * * 1,2,3,4,5 service rpi_no_hdmi start" | sudo crontab -
-echo -e "$(crontab -l 2>/dev/null)\n 10 22 * * 1,2,3,4,5 pkill -o chromium" | crontab -
-echo -e "$(crontab -l 2>/dev/null)\n 11 22 * * 1,2,3,4,5 export DISPLAY=:0 /usr/bin/chromium-browser --kiosk --disable-restore-session-state /home/pi/black.html" | crontab -
-
+# echo -e "$(crontab -l 2>/dev/null)\n 10 22 * * 1,2,3,4,5 pkill -o chromium" | crontab -
+# echo -e "$(crontab -l 2>/dev/null)\n 11 22 * * 1,2,3,4,5 export DISPLAY=:0 /usr/bin/chromium-browser --kiosk --disable-restore-session-state /home/pi/black.html" | crontab -
+echo -e "$(crontab -l 2>/dev/null)\n 50 05 * * 1-5 sed -i \"s/$blackurl/$statutl/g\" /etc/xdg/lxsession/LXDE-pi/autostart && reboot" | sudo crontab -
+echo -e "$(crontab -l 2>/dev/null)\n 10 22 * * 1-5 sed -i \"s/$staturl/$blackutl/g\" /etc/xdg/lxsession/LXDE-pi/autostart && reboot" | sudo crontab -
 # Mute sound - Needed only on Raspian with bullseye
 #echo -e '\e[36m'"Muting sound output...\n"'\e[0m'
 #amixer sset Master 0
@@ -153,8 +155,8 @@ if [[ "$(echo $installvnc | tr '[:upper:]' '[:lower:]')" == "y" ]]; then
 	echo "Starting vnc server....."
 	sudo systemctl start vncserver-x11-serviced.service
 fi
-
-
+# remove the welcome splash screen at next reboot
+sudo apt purge -y piwiz
 echo -e '\e[36m'"Do you want to update pi user password? (y/n)"'\e[0m'
 read pipass
 if [[ "$(echo $pipass | tr '[:upper:]' '[:lower:]')" == "y" ]]; then passwd; fi
