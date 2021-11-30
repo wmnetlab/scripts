@@ -66,7 +66,7 @@ sudo sed -i "s/$CUR_HOSTNAME/$NEW_HOSTNAME/g" /etc/hostname
 echo -e '\e[36m'"New hostname has been set: $NEW_HOSTNAME"'\e[0m'
 # Install unclutter to hide mouse
 echo "installing required components"
-sudo apt install -y unclutter
+sudo apt install -y unclutter figlet
 # Generate GPV_Wallpaper.png
 wallpaper="iVBORw0KGgoAAAANSUhEUgAAB4AAAASwCAMAAAAt7qfEAAAAsVBMVEUANDoANToANTsANjsANzsANzwAODwAOTwAOT0AOj0AOz0APD4APT4APj4APj8APz8AP0AAQD8AQEAAQUAAQUEAQkAAQ0AAQ0EA\
 REEAREIARUEARUIARUMARkIARkMAR0IAR0MASEMASEQASUMASUQASUUASkMASkQASkUAS0QAS0UAS0YATEYATUcATkcAT0gAUEgAUUkAUkkAU0oAVEoAVUsAVksAV0wAWEwAWUwAWU0EGbZRAAAThElE\
@@ -121,14 +121,14 @@ echo "wallpaper created"
 echo -e '\e[36m'"Settings display options: (desktop background, prevent screensaver, autostart of webbroswer at boot)"'\e[0m'
 export DISPLAY=:0.0
 pcmanfm --set-wallpaper "$wallpaperpath/GPV_Wallpaper.png"
-
+echo "$compname" | figlet | sudo tee -a /etc/motd
 # Prevent screensaver and open webpage at boot
 echo '@xset s off' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo '@xset -dpms' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo '@xset s noblank' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo '@unclutter -idle 0' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo "/usr/bin/chromium-browser --kiosk --disable-restore-session-state $staturl" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
-
+sudo timedatectl set-timezone Europe/Zurich
 # Create html file with black backgroound
 echo -e "<!DOCTYPE html> \n <html>\n <head>\n <title>Pause</title>\n </head>\n <body style=\"background-color:black;\">\n </body></html>" | tee $blackurl
 
@@ -138,8 +138,10 @@ echo -e '\e[36m'"Adding crontab entries..."'\e[0m'
 # echo -e "$(sudo crontab -l 2>/dev/null)\n 10 22 * * 1,2,3,4,5 service rpi_no_hdmi start" | sudo crontab -
 # echo -e "$(crontab -l 2>/dev/null)\n 10 22 * * 1,2,3,4,5 pkill -o chromium" | crontab -
 # echo -e "$(crontab -l 2>/dev/null)\n 11 22 * * 1,2,3,4,5 export DISPLAY=:0 /usr/bin/chromium-browser --kiosk --disable-restore-session-state /home/pi/black.html" | crontab -
-echo -e "$(crontab -l 2>/dev/null)\n 50 05 * * 1-5 sed -i \"s/$blackurl/$statutl/g\" /etc/xdg/lxsession/LXDE-pi/autostart && reboot" | sudo crontab -
-echo -e "$(crontab -l 2>/dev/null)\n 10 22 * * 1-5 sed -i \"s/$staturl/$blackutl/g\" /etc/xdg/lxsession/LXDE-pi/autostart && reboot" | sudo crontab -
+#echo -e "$(crontab -l 2>/dev/null)\n\# m h  dom mon dow   command\n 50 05 * * 1-5 /bin/sed -i \"s,$blackurl,$staturl,g\" /etc/xdg/lxsession/LXDE-pi/autostart && /sbin/reboot\
+\n 10 22 * * 1-5 /bin/sed -i \"s,$staturl,$blackurl,g\" /etc/xdg/lxsession/LXDE-pi/autostart && /sbin/reboot" | sudo crontab -
+#echo -e "$(crontab -l 2>/dev/null)\n 10 22 * * 1-5 sed -i \"s,$staturl,$blackurl,g\" /etc/xdg/lxsession/LXDE-pi/autostart && reboot" | sudo crontab -
+
 # Mute sound - Needed only on Raspian with bullseye
 #echo -e '\e[36m'"Muting sound output...\n"'\e[0m'
 #amixer sset Master 0
@@ -156,6 +158,7 @@ if [[ "$(echo $installvnc | tr '[:upper:]' '[:lower:]')" == "y" ]]; then
 	sudo systemctl start vncserver-x11-serviced.service
 fi
 # remove the welcome splash screen at next reboot
+echo -e '\e[36m'"Removing welcome to raspberry program from startup..."'\e[0m'
 sudo apt purge -y piwiz
 echo -e '\e[36m'"Do you want to update pi user password? (y/n)"'\e[0m'
 read pipass
