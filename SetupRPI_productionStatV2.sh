@@ -11,7 +11,6 @@
 ##
 #######################################################################################################
 ## TODO
-# setup correct start and stop times
 # check autorefresh of data in browser
 
 ###### PARAMETERS###############################################################################
@@ -129,18 +128,15 @@ echo '@xset s noblank' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo '@unclutter -idle 0' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo "/usr/bin/chromium-browser --kiosk --disable-restore-session-state $staturl" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 sudo timedatectl set-timezone Europe/Zurich
+sudo cp $wallpaperpath/GPV_Wallpaper.png /usr/share/plymouth/themes/pix/splash.png
 # Create html file with black backgroound
 echo -e "<!DOCTYPE html> \n <html>\n <head>\n <title>Pause</title>\n </head>\n <body style=\"background-color:black;\">\n </body></html>" | tee $blackurl
 
 # Add crontab entries
 echo -e '\e[36m'"Adding crontab entries..."'\e[0m'
 # echo -e "$(sudo crontab -l 2>/dev/null)\n 45 5 * * 1,2,3,4,5 /sbin/shutdown -r now" | sudo crontab -
-# echo -e "$(sudo crontab -l 2>/dev/null)\n 10 22 * * 1,2,3,4,5 service rpi_no_hdmi start" | sudo crontab -
-# echo -e "$(crontab -l 2>/dev/null)\n 10 22 * * 1,2,3,4,5 pkill -o chromium" | crontab -
-# echo -e "$(crontab -l 2>/dev/null)\n 11 22 * * 1,2,3,4,5 export DISPLAY=:0 /usr/bin/chromium-browser --kiosk --disable-restore-session-state /home/pi/black.html" | crontab -
-#echo -e "$(crontab -l 2>/dev/null)\n\# m h  dom mon dow   command\n 50 05 * * 1-5 /bin/sed -i \"s,$blackurl,$staturl,g\" /etc/xdg/lxsession/LXDE-pi/autostart && /sbin/reboot\
+echo -e "$(crontab -l 2>/dev/null)\n\# m h  dom mon dow   command\n 50 05 * * 1-5 /bin/sed -i \"s,$blackurl,$staturl,g\" /etc/xdg/lxsession/LXDE-pi/autostart && /sbin/reboot\
 \n 10 22 * * 1-5 /bin/sed -i \"s,$staturl,$blackurl,g\" /etc/xdg/lxsession/LXDE-pi/autostart && /sbin/reboot" | sudo crontab -
-#echo -e "$(crontab -l 2>/dev/null)\n 10 22 * * 1-5 sed -i \"s,$staturl,$blackurl,g\" /etc/xdg/lxsession/LXDE-pi/autostart && reboot" | sudo crontab -
 
 # Mute sound - Needed only on Raspian with bullseye
 #echo -e '\e[36m'"Muting sound output...\n"'\e[0m'
