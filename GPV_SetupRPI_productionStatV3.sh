@@ -45,7 +45,7 @@ else
 fi
 #setting environment variables
 echo STATURL=$staturl | sudo tee -a /etc/environment
-echo BLACHURL=$blackurl | sudo tee -a (etc/environment
+echo BLACHURL=$blackurl | sudo tee -a /etc/environment
 
 confirmcompname="n"
 while [[ "$confirmcompname" != "y" ]]
