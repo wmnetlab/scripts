@@ -49,10 +49,6 @@ echo -e '\e[36m'"Please be patient while the system will be updated first... thi
 sudo apt update -y
 sudo apt upgrade -y 
 
-#setting environment variables
-echo STATURL=$staturl | sudo tee -a /etc/environment
-echo BLACKURL=$blackurl | sudo tee -a /etc/environment
-
 confirmcompname="n"
 while [[ "$confirmcompname" != "y" ]]
 do
@@ -130,7 +126,7 @@ echo "wallpaper created"
 
 echo -e '\e[36m'"Settings display options: (desktop background, prevent screensaver, autostart of webbroswer at boot)"'\e[0m'
 export DISPLAY=:0.0
-pcmanfm --set-wallpaper "$wallpaperpath/GPV_Wallpaper.png"
+
 echo "$compname" | figlet | sudo tee -a /etc/motd
 # Prevent screensaver and open webpage at boot
 echo '@xset s off' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
@@ -142,6 +138,10 @@ sudo timedatectl set-timezone Europe/Zurich
 sudo cp $wallpaperpath/GPV_Wallpaper.png /usr/share/plymouth/themes/pix/splash.png
 # Create html file with black backgroound
 echo -e "<!DOCTYPE html> \n <html>\n <head>\n <title>Pause</title>\n </head>\n <body style=\"background-color:black;\">\n </body></html>" | tee $blackurl
+
+#setting environment variables
+echo STATURL=$staturl | sudo tee -a /etc/environment
+echo BLACKURL=$blackurl | sudo tee -a /etc/environment
 
 # Add crontab entries
 echo -e '\e[36m'"Adding crontab entries..."'\e[0m'
@@ -194,6 +194,7 @@ IHRoZW4gc3VkbyBzaHV0ZG93biAtciBub3c7IGVsc2UgZWNobyAiTmV3IHN0YXQgdXJsIHdpbGwgbm90
 echo "$changestaturl" | base64 -d > "$wallpaperpath/GPV_ChangeStatURL.sh"
 chmod +x $wallpaperpath/GPV_ChangeStatURL.sh
 echo -e '\e[36m'"To change the statistic page URL please un the GPV_ChangeStatURL.sh script \n"'\e[0m'
+pcmanfm --set-wallpaper "$wallpaperpath/GPV_Wallpaper.png"
 echo -e '\e[36m'"Reboot now? (y/n)"'\e[0m'
 read reb
 if [[ "$reb" == "y" ]]; then sudo shutdown -r now; fi
