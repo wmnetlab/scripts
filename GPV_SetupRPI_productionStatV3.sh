@@ -43,6 +43,12 @@ else
 	echo -e '\e[31m'"Invalid staturl detected: $staturl \n .... exiting script...."'\e[0m'
 	exit 1
 fi
+
+# Updating the system first
+echo -e '\e[36m'"Please be patient while the system will be updated first... this can take about 20 minutes..."'\e[0m'
+sudo apt update -y
+sudo apt upgrade -y 
+
 #setting environment variables
 echo STATURL=$staturl | sudo tee -a /etc/environment
 echo BLACKURL=$blackurl | sudo tee -a /etc/environment
