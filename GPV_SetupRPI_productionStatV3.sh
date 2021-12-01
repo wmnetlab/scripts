@@ -45,7 +45,7 @@ else
 fi
 #setting environment variables
 echo STATURL=$staturl | sudo tee -a /etc/environment
-echo BLACHURL=$blackurl | sudo tee -a /etc/environment
+echo BLACKURL=$blackurl | sudo tee -a /etc/environment
 
 confirmcompname="n"
 while [[ "$confirmcompname" != "y" ]]
@@ -140,8 +140,7 @@ echo -e "<!DOCTYPE html> \n <html>\n <head>\n <title>Pause</title>\n </head>\n <
 # Add crontab entries
 echo -e '\e[36m'"Adding crontab entries..."'\e[0m'
 # echo -e "$(sudo crontab -l 2>/dev/null)\n 45 5 * * 1,2,3,4,5 /sbin/shutdown -r now" | sudo crontab -
-echo -e "$(crontab -l 2>/dev/null)\n\# m h  dom mon dow   command\n 50 05 * * 1-5 /bin/sed -i \"s,\$BLACKURL,\$STATURL,g\" /etc/xdg/lxsession/LXDE-pi/autostart && /sbin/reboot\
-\n 10 22 * * 1-5 /bin/sed -i \"s,\$STATURL,\$BLACKURL,g\" /etc/xdg/lxsession/LXDE-pi/autostart && /sbin/reboot" | sudo crontab -
+echo -e "$(crontab -l 2>/dev/null)\n\# m h  dom mon dow   command\n 50 05 * * 1-5 /bin/sed -i \"s,\$BLACKURL,\$STATURL,g\" /etc/xdg/lxsession/LXDE-pi/autostart && /sbin/reboot\n 10 22 * * 1-5 /bin/sed -i \"s,\$STATURL,\$BLACKURL,g\" /etc/xdg/lxsession/LXDE-pi/autostart && /sbin/reboot" | sudo crontab -
 
 # Mute sound - Needed only on Raspian with bullseye
 #echo -e '\e[36m'"Muting sound output...\n"'\e[0m'
@@ -168,7 +167,7 @@ echo -e '\e[36m'"Do you want to update root password? (y/n)"'\e[0m'
 read rootpass
 if [[ "$(echo $rootpass | tr '[:upper:]' '[:lower:]')" == "y" ]]; then sudo passwd; fi
 echo -e '\e[36m'"\nscript ended.... \n"'\e[0m'
-echo " creating modification script to manage URL.."
+echo "Creating modification script to manage URL.."
 changestaturl="IyEvYmluL2Jhc2gKIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMj\
 IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIwojIyBTY3JpcHQgdG8gY29uZmlndXJlIGEgcmFzcGJlcnJ5IGZvciBwcm9kdWN0aW9uIHN0YXR1\
 cyBtb25pdG9yaW5nCiMjIEl0IGRpc3BsYXlzIGEgd2ViIHBhZ2UgaW4ga2lvc2sgbW9kZSB3aXRoIHByb2R1Y3Rpb24gc3RhdHVzIGluZm9ybWF0aW9uCiMjIHRvIGV4aXQga2lvc2sgbW9kZSBwcmVz\
@@ -179,14 +178,15 @@ KiBdXTsgdGhlbgoJCXJldHVybiB0cnVlCgllbHNlCgkJcmV0dXJuIGZhbHNlCglmaQp9CgplY2hvIC1l
 IHN0YXQgc2l0ZSAuLi4gIidcZVswbScKaWYgW1sgJEVVSUQgLWVxIDAgXV07IHRoZW4KICAgZWNobyAtZSAnXGVbMzFtJyAiUGxlYXNlIHJ1biB0aGUgc2NyaXB0IGFzIHBpIGFuZCBOT1Qgcm9vdCEg\
 IC4uLmV4aXRpbmcgc2NyaXB0Li4uLiInXGVbMG0nCiAgIGV4aXQgMQpmaQoKCmNvbmZpcm11cmw9Im4iCndoaWxlIFtbICIkY29uZmlybXVybCIgIT0gInkiIF1dCmRvCgllY2hvICJQbGVhc2UgaW5z\
 ZXJ0IHRoZSBuZXcgVVJMIGZvciB0aGUgc3RhdGlzdGljcyB3ZWIgcGFnZToiCgllY2hvICJhY3R1YWwgd2VicGFnZTogJHN0YXR1cmwiCglyZWFkIG5ld3N0YXR1cmwKCWVjaG8gLWUgJ1xlWzM2bSci\
-UGxlYXNlIGNvbmZpcm0gc3RhdCBVUkw6ICRuZXdzdGF0dXJsICh5L24pIidcZVswbScKCXJlYWQgY29uZmlybXVybAoJY29uZmlybXVybD0kKGVjaG8gJGNvbmZpcm1jb21wbmFtZSB8IHRyICdbOnVw\
-cGVyOl0nICdbOmxvd2VyOl0nKQpkb25lCgppZiBbWyAhY2hlY2tVUkwgJG5ld3N0YXR1cmwgXV07IHRoZW4KCWVjaG8gIlRoZSBVUkwgaXMgbm90IGEgdmFsaWQgVVJMLi5leGl0aW5nLi4iCglleGl0\
-IDEKZmkKCiMgVXBkYXRlIGVudmlyb25tZW50IHZhcnMgYW5kIGF1dG9zdGFydCBmaWxlCnN1ZG8gc2VkIC1pICJzLCRTVEFUVVJMLCRuZXdzdGF0dXJsLGciIC9ldGMvZW52aXJvbm1lbnQKc3VkbyBz\
-ZWQgLWkgInMsLiovdXNyL2Jpbi9jaHJvbWl1bS1icm93c2VyIC0ta2lvc2sgLS1kaXNhYmxlLXJlc3RvcmUtc2Vzc2lvbi1zdGF0ZS4qLC91c3IvYmluL2Nocm9taXVtLWJyb3dzZXIgLS1raW9zayAt\
-LWRpc2FibGUtcmVzdG9yZS1zZXNzaW9uLXN0YXRlICRzdGF0dXJsLCIgL2V0Yy94ZGcvbHhzZXNzaW9uL0xYREUtcGkvYXV0b3N0YXJ0CmVjaG8gInRoZSBuZXcgc3RhdGlzdGljIHdlYnNpdGUgd2ls\
-bCBiZSBhcHBsaWVkIGFmdGVyIHJlYm9vdCIKZWNobyAkbmV3c3RhdHVybAplY2hvIC1lICdcZVszNm0nIlJlYm9vdCBub3c/ICh5L24pIidcZVswbScKcmVhZCByZWIKaWYgW1sgIiRyZWIiID09ICJ5\
-IiBdXTsgdGhlbiBzdWRvIHNodXRkb3duIC1yIG5vdzsgZWxzZSBlY2hvICJOZXcgc3RhdCB1cmwgd2lsbCBub3QgYXBwbHkgdW50aWwgeW91IHJlYmJvdC4iIGZpCg=="
+UGxlYXNlIGNvbmZpcm0gc3RhdCBVUkw6ICRuZXdzdGF0dXJsICh5L24pIidcZVswbScKCXJlYWQgY29uZmlybXVybAoJY29uZmlybXVybD0kKGVjaG8gJGNvbmZpcm11cmwgfCB0ciAnWzp1cHBlcjpd\
+JyAnWzpsb3dlcjpdJykKZG9uZQoKaWYgW1sgIWNoZWNrVVJMICRuZXdzdGF0dXJsIF1dOyB0aGVuCgllY2hvICJUaGUgVVJMIGlzIG5vdCBhIHZhbGlkIFVSTC4uZXhpdGluZy4uIgoJZXhpdCAxCmZp\
+CgojIFVwZGF0ZSBlbnZpcm9ubWVudCB2YXJzIGFuZCBhdXRvc3RhcnQgZmlsZQpzdWRvIHNlZCAtaSAicywkU1RBVFVSTCwkbmV3c3RhdHVybCxnIiAvZXRjL2Vudmlyb25tZW50CnN1ZG8gc2VkIC1p\
+ICJzLC4qL3Vzci9iaW4vY2hyb21pdW0tYnJvd3NlciAtLWtpb3NrIC0tZGlzYWJsZS1yZXN0b3JlLXNlc3Npb24tc3RhdGUuKiwvdXNyL2Jpbi9jaHJvbWl1bS1icm93c2VyIC0ta2lvc2sgLS1kaXNh\
+YmxlLXJlc3RvcmUtc2Vzc2lvbi1zdGF0ZSAkc3RhdHVybCwiIC9ldGMveGRnL2x4c2Vzc2lvbi9MWERFLXBpL2F1dG9zdGFydAplY2hvICJ0aGUgbmV3IHN0YXRpc3RpYyB3ZWJzaXRlIHdpbGwgYmUg\
+YXBwbGllZCBhZnRlciByZWJvb3QiCmVjaG8gJG5ld3N0YXR1cmwKZWNobyAtZSAnXGVbMzZtJyJSZWJvb3Qgbm93PyAoeS9uKSInXGVbMG0nCnJlYWQgcmViCmlmIFtbICIkcmViIiA9PSAieSIgXV07\
+IHRoZW4gc3VkbyBzaHV0ZG93biAtciBub3c7IGVsc2UgZWNobyAiTmV3IHN0YXQgdXJsIHdpbGwgbm90IGFwcGx5IHVudGlsIHlvdSByZWJib3QuIiBmaQo="
 echo "$changestaturl" | base64 -d > "$wallpaperpath/GPV_ChangeStatURL.sh"
+chmod +x $wallpaperpath/GPV_ChangeStatURL.sh
 echo -e '\e[36m'"To change the statistic page URL please un the GPV_ChangeStatURL.sh script \n"'\e[0m'
 echo -e '\e[36m'"Reboot now? (y/n)"'\e[0m'
 read reb
