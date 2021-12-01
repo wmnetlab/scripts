@@ -46,8 +46,8 @@ fi
 
 # Updating the system first
 echo -e '\e[36m'"Please be patient while the system will be updated first... this can take about 20 minutes..."'\e[0m'
-sudo apt update -y
-sudo apt upgrade -y 
+#sudo apt update -y
+#sudo apt upgrade -y 
 
 confirmcompname="n"
 while [[ "$confirmcompname" != "y" ]]
