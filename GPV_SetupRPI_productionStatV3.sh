@@ -146,7 +146,7 @@ echo BLACKURL=$blackurl | sudo tee -a /etc/environment
 # Add crontab entries
 echo -e '\e[36m'"Adding crontab entries..."'\e[0m'
 # echo -e "$(sudo crontab -l 2>/dev/null)\n 45 5 * * 1,2,3,4,5 /sbin/shutdown -r now" | sudo crontab -
-echo -e "$(crontab -l 2>/dev/null)\n\# m h  dom mon dow   command\n 50 05 * * 1-5 /bin/sed -i \"s,\$BLACKURL,\$STATURL,g\" /etc/xdg/lxsession/LXDE-pi/autostart && /sbin/reboot\n 10 22 * * 1-5 /bin/sed -i \"s,\$STATURL,\$BLACKURL,g\" /etc/xdg/lxsession/LXDE-pi/autostart && /sbin/reboot" | sudo crontab -
+echo -e "$(crontab -l 2>/dev/null)\n\# m h  dom mon dow   command\n 50 05 * * 1,2,3,4,5 /bin/sed -i \"s,\$BLACKURL,\$STATURL,g\" /etc/xdg/lxsession/LXDE-pi/autostart && /sbin/reboot\n 10 22 * * 1,2,3,4,5 /bin/sed -i \"s,\$STATURL,\$BLACKURL,g\" /etc/xdg/lxsession/LXDE-pi/autostart && /sbin/reboot" | sudo crontab -
 
 # Mute sound - Needed only on Raspian with bullseye
 #echo -e '\e[36m'"Muting sound output...\n"'\e[0m'
