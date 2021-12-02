@@ -76,6 +76,7 @@ sudo sed -i "s/$CUR_HOSTNAME/$NEW_HOSTNAME/g" /etc/hostname
 echo -e '\e[36m'"New hostname has been set: $NEW_HOSTNAME"'\e[0m'
 # Install unclutter to hide mouse
 echo "installing required components"
+sudo apt update -y
 sudo apt install -y unclutter figlet imagemagick
 sudo apt-mark hold chromium-browser
 # Generate GPV_Wallpaper.png
