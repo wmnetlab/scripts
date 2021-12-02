@@ -45,7 +45,7 @@ else
 fi
 
 # Updating the system first
-echo -e '\e[36m'"Please be patient while the system will be updated first... this can take about 20 minutes..."'\e[0m'
+#echo -e '\e[36m'"Please be patient while the system will be updated first... this can take about 20 minutes..."'\e[0m'
 #sudo apt update -y
 #sudo apt upgrade -y 
 
@@ -193,7 +193,7 @@ b3c/ICh5L24pIidcZVswbScKcmVhZCByZWIKaWYgW1sgIiRyZWIiID09ICJ5IiBdXTsgdGhlbiBzdWRv
 echo "$changestaturl" | base64 -d > "$wallpaperpath/GPV_ChangeStatURL.sh"
 chmod +x $wallpaperpath/GPV_ChangeStatURL.sh
 echo -e '\e[36m'"To change the statistic page URL please un the GPV_ChangeStatURL.sh script \n"'\e[0m'
-pcmanfm --set-wallpaper "$wallpaperpath/GPV_Wallpaper.png"
+export DISPLAY=:0 && pcmanfm --set-wallpaper "$wallpaperpath/GPV_Wallpaper.png"
 echo -e '\e[36m'"Reboot now? (y/n)"'\e[0m'
 read reb
 if [[ "$reb" == "y" ]]; then sudo shutdown -r now; fi
