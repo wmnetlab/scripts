@@ -13,11 +13,15 @@
 #######################################################################################################
 ## TODO
 # check autorefresh of data in browser
-
+# Broken apt run those commands:
+# sudo rm -rf /var/lib/apt/lists/*
+# sudo apt-get clean
+# sudo apt-get update
+# sudo apt-get upgrade --fix-missing
 ###### PARAMETERS###############################################################################
 # Parameters can be changed here directly or overwritten by command line arguments using -varname "VALUE"
 wallpaperpath=/home/pi    #change to /home/pi
-staturl="https://inttargitapp.int.gpv.dk/anywhere"
+staturl="http://app.ccsholding.com/intranet/KPIs/SMT.aspx?Id=SX1"
 blackurl="/home/pi/black.html"
 ###### END PARAMETERS ##########################################################################
 # Read parameters from command line
@@ -73,6 +77,7 @@ echo -e '\e[36m'"New hostname has been set: $NEW_HOSTNAME"'\e[0m'
 # Install unclutter to hide mouse
 echo "installing required components"
 sudo apt install -y unclutter figlet
+sudo apt-mark hold chromium-browser
 # Generate GPV_Wallpaper.png
 wallpaper="iVBORw0KGgoAAAANSUhEUgAAB4AAAASwCAMAAAAt7qfEAAAAsVBMVEUANDoANToANTsANjsANzsANzwAODwAOTwAOT0AOj0AOz0APD4APT4APj4APj8APz8AP0AAQD8AQEAAQUAAQUEAQkAAQ0AAQ0EA\
 REEAREIARUEARUIARUMARkIARkMAR0IAR0MASEMASEQASUMASUQASUUASkMASkQASkUAS0QAS0UAS0YATEYATUcATkcAT0gAUEgAUUkAUkkAU0oAVEoAVUsAVksAV0wAWEwAWUwAWU0EGbZRAAAThElE\
@@ -146,7 +151,7 @@ echo BLACKURL=$blackurl | sudo tee -a /etc/environment
 # Add crontab entries
 echo -e '\e[36m'"Adding crontab entries..."'\e[0m'
 # echo -e "$(sudo crontab -l 2>/dev/null)\n 45 5 * * 1,2,3,4,5 /sbin/shutdown -r now" | sudo crontab -
-echo -e "$(crontab -l 2>/dev/null)\n\# m h  dom mon dow   command\n 50 05 * * 1,2,3,4,5 /bin/sed -i \"s,\$BLACKURL,\$STATURL,g\" /etc/xdg/lxsession/LXDE-pi/autostart && /sbin/reboot\n 10 22 * * 1,2,3,4,5 /bin/sed -i \"s,\$STATURL,\$BLACKURL,g\" /etc/xdg/lxsession/LXDE-pi/autostart && /sbin/reboot" | sudo crontab -
+echo -e "$(crontab -l 2>/dev/null)\n # m h  dom mon dow   command\n 50 05 * * 1,2,3,4,5 /bin/sed -i \"s,\$BLACKURL,\$STATURL,g\" /etc/xdg/lxsession/LXDE-pi/autostart && /sbin/reboot\n 10 22 * * 1,2,3,4,5 /bin/sed -i \"s,\$STATURL,\$BLACKURL,g\" /etc/xdg/lxsession/LXDE-pi/autostart && /sbin/reboot" | sudo crontab -
 
 # Mute sound - Needed only on Raspian with bullseye
 #echo -e '\e[36m'"Muting sound output...\n"'\e[0m'
@@ -174,26 +179,33 @@ read rootpass
 if [[ "$(echo $rootpass | tr '[:upper:]' '[:lower:]')" == "y" ]]; then sudo passwd; fi
 echo -e '\e[36m'"\nscript ended.... \n"'\e[0m'
 echo "Creating modification script to manage URL.."
-changestaturl="CgojIS9iaW4vYmFzaAojIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMj\
-IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjCiMjIFNjcmlwdCB0byBjb25maWd1cmUgYSByYXNwYmVycnkgZm9yIHByb2R1Y3Rpb24gc3Rh\
-dHVzIG1vbml0b3JpbmcKIyMgSXQgZGlzcGxheXMgYSB3ZWIgcGFnZSBpbiBraW9zayBtb2RlIHdpdGggcHJvZHVjdGlvbiBzdGF0dXMgaW5mb3JtYXRpb24KIyMgdG8gZXhpdCBraW9zayBtb2RlIHBy\
-ZXNzIFtjdHJsXSArIEY0CiMjCiMjIFNjcmlwdCBjcmVhdGVkIDEuMTIuMjAyMSBieSBNYXJjIFdlbmdlcgojIwojIyBVc2FnZSAuL0dQVl9DaGFuZ2VTdGF0VVJMLnNoCiMjCiMjIyMjIyMjIyMjIyMj\
-IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMKc3RhdHVybD0kU1RBVFVSTApibGFja3Vy\
-bD0kQkxBQ0hVUkwKCmVjaG8gLWUgJ1xlWzQ2bScnXGVbMzBtJyJXZWxjb21lIHRvIFVSTCBjaGFuZ2Ugd2l6YXJkIGZvciB0aGUgc3RhdCBzaXRlIC4uLiAiJ1xlWzBtJwppZiBbWyAkRVVJRCAtZXEg\
-MCBdXTsgdGhlbgogICBlY2hvIC1lICdcZVszMW0nICJQbGVhc2UgcnVuIHRoZSBzY3JpcHQgYXMgcGkgYW5kIE5PVCByb290ISAgLi4uZXhpdGluZyBzY3JpcHQuLi4uIidcZVswbScKICAgZXhpdCAx\
-CmZpCgoKY29uZmlybXVybD0ibiIKd2hpbGUgW1sgIiRjb25maXJtdXJsIiAhPSAieSIgXV0KZG8KICAgICAgICBlY2hvICJQbGVhc2UgaW5zZXJ0IHRoZSBuZXcgVVJMIGZvciB0aGUgc3RhdGlzdGlj\
-cyB3ZWIgcGFnZToiCiAgICAgICAgZWNobyAiYWN0dWFsIHdlYnBhZ2U6ICRzdGF0dXJsIgogICAgICAgIHJlYWQgbmV3c3RhdHVybAogICAgICAgIGVjaG8gLWUgJ1xlWzM2bSciUGxlYXNlIGNvbmZp\
-cm0gc3RhdCBVUkw6ICRuZXdzdGF0dXJsICh5L24pIidcZVswbScKICAgICAgICByZWFkIGNvbmZpcm11cmwKICAgICAgICBjb25maXJtdXJsPSQoZWNobyAkY29uZmlybXVybCB8IHRyICdbOnVwcGVy\
-Ol0nICdbOmxvd2VyOl0nKQpkb25lCgppZiBbWyAiJG5ld3N0YXR1cmwiID1+ICJodHRwIi4qIjovLyIuKiBdXTsgdGhlbgogICAgICAgIGVjaG8gIk9LLCB2YWxpZCBVUkwiCmVsc2UKICAgICAgICBl\
-Y2hvICJJbnZhbGlkIFVSTCBleGl0aW5nLi4uIgogICAgICAgIGV4aXQgMQpmaQoKCiMgVXBkYXRlIGVudmlyb25tZW50IHZhcnMgYW5kIGF1dG9zdGFydCBmaWxlCnN1ZG8gc2VkIC1pICJzLCRTVEFU\
-VVJMLCRuZXdzdGF0dXJsLGciIC9ldGMvZW52aXJvbm1lbnQKc3VkbyBzZWQgLWkgInMsLiovdXNyL2Jpbi9jaHJvbWl1bS1icm93c2VyIC0ta2lvc2sgLS1kaXNhYmxlLXJlc3RvcmUtc2Vzc2lvbi1z\
-dGF0ZS4qLC91c3IvYmluL2Nocm9taXVtLWJyb3dzZXIgLS1raW9zayAtLWRpc2FibGUtcmVzdG9yZS1zZXNzaW9uLXN0YXRlICRuZXdzdGF0dXJsLCIgL2V0Yy94ZGcvbHhzZXNzaW9uL0xYREUtcGkv\
-YXV0b3N0YXJ0CmVjaG8gInRoZSBuZXcgc3RhdGlzdGljIHdlYnNpdGUgd2lsbCBiZSBhcHBsaWVkIGFmdGVyIHJlYm9vdCIKZWNobyAkbmV3c3RhdHVybAplY2hvIC1lICdcZVszNm0nIlJlYm9vdCBu\
-b3c/ICh5L24pIidcZVswbScKcmVhZCByZWIKaWYgW1sgIiRyZWIiID09ICJ5IiBdXTsgdGhlbiBzdWRvIHNodXRkb3duIC1yIG5vdzsgZmkK"
+changestaturl="IyEvYmluL2Jhc2gKIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMj\
+IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIwojIyBTY3JpcHQgdG8gY29uZmlndXJlIGEgcmFzcGJlcnJ5IGZvciBwcm9kdWN0aW9uIHN0YXR1\
+cyBtb25pdG9yaW5nCiMjIEl0IGRpc3BsYXlzIGEgd2ViIHBhZ2UgaW4ga2lvc2sgbW9kZSB3aXRoIHByb2R1Y3Rpb24gc3RhdHVzIGluZm9ybWF0aW9uCiMjIHRvIGV4aXQga2lvc2sgbW9kZSBwcmVz\
+cyBbY3RybF0gKyBGNAojIwojIyBTY3JpcHQgY3JlYXRlZCAxLjEyLjIwMjEgYnkgTWFyYyBXZW5nZXIKIyMKIyMgVXNhZ2UgLi9HUFZfQ2hhbmdlU3RhdFVSTC5zaAojIyBTaWxlbnQgcnVuOiAuL0dQ\
+Vl9DaGFuZ2VTdGF0VVJMLnNoIC1uZXdzdGF0dXJsICJodHRwOi8vbmV3dXJsLmNoIiAtcyAxCiMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMj\
+IyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMKc3RhdHVybD0kU1RBVFVSTApibGFja3VybD0kQkxBQ0hVUkwKIyBSZWFkIHBhcmFtZXRlcnMgZnJvbSBjb21tYW5kIGxp\
+bmUKd2hpbGUgWyAkIyAtZ3QgMCBdOyBkbwoKICAgaWYgW1sgJDEgPT0gKiItIiogXV07IHRoZW4KICAgICAgICBwYXJhbT0iJHsxLy0vfSIKICAgICAgICBkZWNsYXJlICRwYXJhbT0iJDIiCiAgIGZp\
+CgogIHNoaWZ0CmRvbmUKCmlmIFtbICRFVUlEIC1lcSAwIF1dOyB0aGVuCiAgIGVjaG8gLWUgJ1xlWzMxbScgIlBsZWFzZSBydW4gdGhlIHNjcmlwdCBhcyBwaSBhbmQgTk9UIHJvb3QhICAuLi5leGl0\
+aW5nIHNjcmlwdC4uLi4iJ1xlWzBtJwogICBleGl0IDEKZmkKCmlmIFtbICRzIC1uZSAxIF1dOyB0aGVuIAoJZWNobyAtZSAnXGVbNDZtJydcZVszMG0nIldlbGNvbWUgdG8gVVJMIGNoYW5nZSB3aXph\
+cmQgZm9yIHRoZSBzdGF0IHNpdGUgLi4uICInXGVbMG0nCgljb25maXJtdXJsPSJuIgoJd2hpbGUgW1sgIiRjb25maXJtdXJsIiAhPSAieSIgXV0KCWRvCgkJCWVjaG8gIlBsZWFzZSBpbnNlcnQgdGhl\
+IG5ldyBVUkwgZm9yIHRoZSBzdGF0aXN0aWNzIHdlYiBwYWdlOiIKCQkJZWNobyAiYWN0dWFsIHdlYnBhZ2U6ICRzdGF0dXJsIgoJCQlyZWFkIG5ld3N0YXR1cmwKCQkJZWNobyAtZSAnXGVbMzZtJyJQ\
+bGVhc2UgY29uZmlybSBzdGF0IFVSTDogJG5ld3N0YXR1cmwgKHkvbikiJ1xlWzBtJwoJCQlyZWFkIGNvbmZpcm11cmwKCQkJY29uZmlybXVybD0kKGVjaG8gJGNvbmZpcm11cmwgfCB0ciAnWzp1cHBl\
+cjpdJyAnWzpsb3dlcjpdJykKCWRvbmUKZmkKCmlmIFtbICIkbmV3c3RhdHVybCIgPX4gImh0dHAiLioiOi8vIi4qIF1dOyB0aGVuCiAgICAgICAgaWYgW1sgJHMgLW5lIDEgXV07IHRoZW4gZWNobyAi\
+T0ssIHZhbGlkIFVSTCI7IGZpCmVsc2UKICAgICAgICBlY2hvICJJbnZhbGlkIFVSTCBleGl0aW5nLi4uIgogICAgICAgIGV4aXQgMQpmaQoKIyBVcGRhdGUgZW52aXJvbm1lbnQgdmFycyBhbmQgYXV0\
+b3N0YXJ0IGZpbGUKc3VkbyBzZWQgLWkgInMsJFNUQVRVUkwsJG5ld3N0YXR1cmwsZyIgL2V0Yy9lbnZpcm9ubWVudApzdWRvIHNlZCAtaSAicywuKi91c3IvYmluL2Nocm9taXVtLWJyb3dzZXIgLS1r\
+aW9zayAtLWRpc2FibGUtcmVzdG9yZS1zZXNzaW9uLXN0YXRlLiosL3Vzci9iaW4vY2hyb21pdW0tYnJvd3NlciAtLWtpb3NrIC0tZGlzYWJsZS1yZXN0b3JlLXNlc3Npb24tc3RhdGUgJG5ld3N0YXR1\
+cmwsIiAvZXRjL3hkZy9seHNlc3Npb24vTFhERS1waS9hdXRvc3RhcnQKaWYgW1sgJHMgLW5lIDEgXV07dGhlbgoJZWNobyAidGhlIG5ldyBzdGF0aXN0aWMgd2Vic2l0ZSB3aWxsIGJlIGFwcGxpZWQg\
+YWZ0ZXIgcmVib290IgoJZWNobyAkbmV3c3RhdHVybAoJZWNobyAtZSAnXGVbMzZtJyJSZWJvb3Qgbm93PyAoeS9uKSInXGVbMG0nCglyZWFkIHJlYgoJaWYgW1sgIiRyZWIiID09ICJ5IiBdXTsgdGhl\
+biBzdWRvIHNodXRkb3duIC1yIG5vdzsgZmkKZWxzZQoJZWNobyAiTmV3IFVSTCBzdWNjZXNmdWwgcmVwbGFjZWQuIFJlYm9vdGluZy4uLiIKCXN1ZG8gc2h1dGRvd24gLXIgbm93CmZpIA=="
 echo "$changestaturl" | base64 -d > "$wallpaperpath/GPV_ChangeStatURL.sh"
 chmod +x $wallpaperpath/GPV_ChangeStatURL.sh
 echo -e '\e[36m'"To change the statistic page URL please un the GPV_ChangeStatURL.sh script \n"'\e[0m'
-export DISPLAY=:0 && pcmanfm --set-wallpaper "$wallpaperpath/GPV_Wallpaper.png"
+# export DISPLAY=:0 && pcmanfm --set-wallpaper "$wallpaperpath/GPV_Wallpaper.png"
+cp $wallpaperpath/GPV_Wallpaper.png $wallpaperpath/temple.png
+mogrify -format jpg $wallpaperpath/temple.png
+sudo mv /usr/share/rpd-wallpaper/temple.jpg /usr/share/rpd-wallpaper/temple1.jpg
+sudo mv $wallpaperpath/temple.jpg /usr/share/rpd-wallpaper/temple.jpg
 echo -e '\e[36m'"Reboot now? (y/n)"'\e[0m'
 read reb
 if [[ "$reb" == "y" ]]; then sudo shutdown -r now; fi
