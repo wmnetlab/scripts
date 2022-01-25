@@ -139,7 +139,7 @@ echo '@xset s off' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo '@xset -dpms' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo '@xset s noblank' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo '@unclutter -idle 0' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
-echo "/usr/bin/chromium-browser --kiosk --disable-restore-session-state -disable-features=TranslateUI --disable-session-crashed-bubble --check-for-update-interval=2592000 --app=$STATURL" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
+echo "/usr/bin/chromium-browser --kiosk --disable-restore-session-state -disable-features=TranslateUI --disable-session-crashed-bubble --check-for-update-interval=2592000 --app=\$STATURL" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 sudo timedatectl set-timezone Europe/Zurich
 sudo cp $wallpaperpath/GPV_Wallpaper.png /usr/share/plymouth/themes/pix/splash.png
 # Create html file with black backgroound
