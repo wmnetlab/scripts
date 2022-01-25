@@ -21,7 +21,7 @@
 ###### PARAMETERS###############################################################################
 # Parameters can be changed here directly or overwritten by command line arguments using -varname "VALUE"
 wallpaperpath=/home/pi    #change to /home/pi
-staturl="http://app.ccsholding.com/intranet/KPIs/SMT.aspx?Id=SX1"
+staturl="http://app.ccsholding.com/intranet/SMT/"
 blackurl="/home/pi/black.html"
 ###### END PARAMETERS ##########################################################################
 # Read parameters from command line
@@ -139,7 +139,7 @@ echo '@xset s off' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo '@xset -dpms' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo '@xset s noblank' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo '@unclutter -idle 0' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
-echo "/usr/bin/chromium-browser --kiosk --disable-restore-session-state $staturl" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
+echo "/usr/bin/chromium-browser --kiosk --disable-restore-session-state -disable-features=TranslateUI --disable-session-crashed-bubble --check-for-update-interval=2592000 $staturl" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 sudo timedatectl set-timezone Europe/Zurich
 sudo cp $wallpaperpath/GPV_Wallpaper.png /usr/share/plymouth/themes/pix/splash.png
 # Create html file with black backgroound
