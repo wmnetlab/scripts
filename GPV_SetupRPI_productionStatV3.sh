@@ -133,14 +133,14 @@ echo "wallpaper created"
 echo -e '\e[36m'"Settings display options: (desktop background, prevent screensaver, autostart of webbroswer at boot)"'\e[0m'
 export DISPLAY=:0.0
 # create laucher script for chrome in kiosk mode
-echo -e "\#!/bin/bash \n /usr/bin/chromium-browser --kiosk --disable-restore-session-state -disable-features=TranslateUI --disable-session-crashed-bubble --check-for-update-interval=2592000 --app=\$STATURL" > $wallpaperpaht/GPV_start_chrome_kiosk.sh
+echo -e "\#!/bin/bash \n /usr/bin/chromium-browser --kiosk --disable-restore-session-state -disable-features=TranslateUI --disable-session-crashed-bubble --check-for-update-interval=2592000 --app=\$STATURL" > $wallpaperpath/GPV_start_chrome_kiosk.sh
 echo "$compname" | figlet | sudo tee -a /etc/motd
 # Prevent screensaver and open webpage at boot
 echo '@xset s off' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo '@xset -dpms' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo '@xset s noblank' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 echo '@unclutter -idle 0' | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
-echo "@$wallpaperpaht/GPV_start_chrome_kiosk.sh" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
+echo "@$wallpaperpath/GPV_start_chrome_kiosk.sh" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 #echo "/usr/bin/chromium-browser --kiosk --disable-restore-session-state -disable-features=TranslateUI --disable-session-crashed-bubble --check-for-update-interval=2592000 --app=\$STATURL" | sudo tee -a /etc/xdg/lxsession/LXDE-pi/autostart
 sudo timedatectl set-timezone Europe/Zurich
 sudo cp $wallpaperpath/GPV_Wallpaper.png /usr/share/plymouth/themes/pix/splash.png
